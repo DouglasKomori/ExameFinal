@@ -2,16 +2,16 @@
     "version": 2,
     "builds": [
       {
-        "src": "server.js",
+        "src": "app.js",
         "use": "@vercel/node"
       }
     ],
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "server.js"
+        "dest": "index.js"
       }
     ],
-    "ignoreCommand": "if [ \"$VERCEL_ENV\" = \"production\" ]; then exit 1; fi"
+    "ignoreCommand": "if [ \"$VERCEL_ENV\" = \"production\" ]; then exit 1; fi"
   }
   

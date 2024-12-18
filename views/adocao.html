@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f9;
+        margin: 0;
+        padding: 20px;
+        color: #333;
+        text-align: center;
+      }
+
+      h1 {
+        color: #007bff;
+        margin-bottom: 20px;
+      }
+
+      ul {
+        list-style-type: none;
+        padding: 0;
+        margin-bottom: 20px;
+      }
+
+      li {
+        display: inline-block;
+        margin: 0 10px;
+      }
+
+      button {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      button a {
+        color: #fff;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      button:hover {
+        background-color: #0056b3;
+      }
+
+      form {
+        background: #fff;
+        padding: 20px 30px;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        display: inline-block;
+        margin-bottom: 30px;
+      }
+
+      select {
+        width: 200px;
+        padding: 10px;
+        margin: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 14px;
+        box-sizing: border-box;
+      }
+
+      button[type="submit"] {
+        background-color: #28a745;
+        padding: 12px 20px;
+        font-size: 16px;
+      }
+
+      button[type="submit"]:hover {
+        background-color: #218838;
+      }
+
+      table {
+        width: 80%;
+        margin: 0 auto;
+        border-collapse: collapse;
+        background: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      thead {
+        background-color: #007bff;
+        color: #fff;
+      }
+
+      th,
+      td {
+        padding: 12px 15px;
+        text-align: left;
+        border: 1px solid #ddd;
+      }
+
+      tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+
+      tbody tr:hover {
+        background-color: #f1f1f1;
+      }
+
+      th {
+        font-weight: bold;
+      }
+
+      td {
+        color: #555;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Adocao</h1>
+    <ul>
+      <li>
+        <button>
+          <a href="/menu" style="text-decoration: none">Voltar ao menu</a>
+        </button>
+      </li>
+    </ul>
+    <form action="/cadastrarAdocao" method="post" id="adotForm">
+      <div>
+        <label for="">Interessados:</label>
+        <select id="interessado" name="interessado"></select>
+      </div>
+      <div>
+        <label for="">Pets:</label>
+        <select id="pet" name="pet"></select>
+      </div>
+      <button type="submit">Cadastrar</button>
+    </form>
+    <table id="adocaoTable">
+      <thead>
+        <tr>
+          <th>Interessado</th>
+          <th>pet</th>
+          <th>registrado em</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script>
+      function carregarInteressados() {
+        fetch("/renderizarInteressados")
+          .then((response) => response.json())
+          .then((data) => {
+            const selectElement = document.getElementById("interessado");
+            data.forEach((option) => {
+              const optionElement = document.createElement("option");
+              optionElement.value = option.nome;
+              optionElement.textContent = option.nome;
+              selectElement.appendChild(optionElement);
+            });
+          })
+          .catch((error) =>
+            console.error("Erro ao carregar os usuários:", error)
+          );
+      }
+      function carregarPets() {
+        fetch("/renderizarPest", {
+          method: "GET",
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data, "ptes");
+            const selectElement = document.getElementById("pet");
+            data.forEach((option) => {
+              const optionElement = document.createElement("option");
+              optionElement.value = option.nome;
+              optionElement.textContent = option.nome;
+              selectElement.appendChild(optionElement);
+            });
+          })
+          .catch((error) =>
+            console.error("Erro ao carregar os usuários:", error)
+          );
+      }
+      function carregarAdocoes() {
+        fetch("/renderizarAdocoes")
+          .then((response) => response.json())
+          .then((data) => {
+            const tableBody = document.querySelector("#adocaoTable tbody");
+            tableBody.innerHTML = "";
+            data.forEach((item) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `
+                                <td>${item.interessado}</td>
+                                <td>${item.pet}</td>
+                                <td>${item.registradoEm}</td>
+                            `;
+              tableBody.appendChild(row);
+            });
+          })
+          .catch((error) =>
+            console.error("Erro ao carregar os usuários:", error)
+          );
+      }
+
+      window.onload = () => {
+        carregarInteressados();
+        carregarPets();
+        carregarAdocoes();
+      };
+    </script>
+  </body>
+</html>
